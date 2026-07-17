@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const cors= require('cors');
 const cookieParser = require("cookie-parser");
+const errorHandler = require("./middleware/errorHandler");
 
 
 app.use(cors({
@@ -15,4 +16,7 @@ app.use(cookieParser());
 app.use("/api/auth",require("./routes/userRoutes"))
 
 
+
+// at the end
+app.use(errorHandler)
 module.exports = app;
