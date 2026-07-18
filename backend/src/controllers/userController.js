@@ -30,7 +30,7 @@ exports.register = asyncHandler(async(req,res)=>{
 //* login api
 exports.login = asyncHandler(async (req, res) => {
   const { error, value } = loginSchema.validate(req.body);
-  if (error) return res.status(400).json({ message: false, message: error.details[0].message });
+  if (error) return res.status(400).json({ success: false, message: error.details[0].message });
   const { email, password } = value;
   const user = await User.findOne({ email });
   if (!user) {
@@ -42,7 +42,11 @@ exports.login = asyncHandler(async (req, res) => {
   }
   const accessToken = generateToken({ id: user._id });
 
-  res.status(200).json({ success: true, message: "Login successfull!", token: accessToken })
+  res.status(200).json({ success: true, message: "Login successfull!", token: accessToken, user:user.toJSON() })
 });
 
-
+//? get user profile
+exports.getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id).select("-password -__v");
+  res.status(200).json({ success: true, user:user.toJSON() });
+});
